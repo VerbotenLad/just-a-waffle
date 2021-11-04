@@ -36,41 +36,40 @@ class Post
 
     public static function find($slug)
     {
-        //create path using slug to find resource
-        //if resource doesnt exist redirect to /, otherwise it goes to the return func
-        if (!file_exists($path = resource_path("posts/{$slug}.html"))) {
-            throw new ModelNotFoundException();
-        }
+        //of all the blog posts find the one with a slug that matches the one that was requested
 
+        $posts = static::all();
 
-        //caches and returns $path content
-        return cache()->remember("posts.{$slug}", 5, fn () => file_get_contents($path));
+        return $posts->firstWhere('slug', $slug);
     }
 
     public static function all()
     {
+        return cache()->rememberForever('posts.all', function(){
+            return collect(File::files(resource_path("posts"))/**This returns an array of posts*/)
+                ->map(function($file) {
+                    return YamlFrontMAtter::parseFile($file); //returns document
+                })
+                ->map(function($document){//map a second time
+                    return new Post(
+                        $document->title,
+                        $document->excerpt,
+                        $document->date,
+                        $document->body(),
+                        $document->slug,
+                    );//returns a post
+                })
+                ->sortByDesc('date');
+        } );
         /**
          * if you find yourself looping over something
          * and then building up a different array you can
          * use array_map
          */
         /**this is functionally identical to array_map
-        Laravel's collect() function collects an array and wraps it
-        in a collect object. Then you can map over every item in the array
+        Laravel's collect() function collects an array (here the array is returned by File::files(resource_path())
+         * and wraps it in a collect object. Then you can map over every item in the array
         or add, or pull, or loop through them, that can be done.*/
-        return collect(File::files(resource_path("posts")))
-            ->map(function($file) {
-                return YamlFrontMAtter::parseFile($file);
-            })
-            ->map(function($document){
-                return new Post(
-                    $document->title,
-                    $document->excerpt,
-                    $document->date,
-                    $document->body(),
-                    $document->slug,
-                );
-            });
 
         /**
          * HERE'S THE SAME THING BUT USING ARRAYMAP

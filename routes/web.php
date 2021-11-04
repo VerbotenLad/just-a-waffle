@@ -16,10 +16,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
 
-
-
-
-//    ddd($posts);
     return view('posts', [
         'posts' => Post::all()
     ]);
@@ -29,7 +25,6 @@ Route::get('/', function () {
 //This get method returns a view function which can take either a KEY or a KEY VALUE pair
 Route::get('posts/{post}', function($slug) {
     //Find a post by its slug, pass it to a view named "post"
-
     return view('post', [
         'post' => Post::find($slug)
     ]);

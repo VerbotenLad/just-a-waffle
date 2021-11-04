@@ -8,12 +8,13 @@
         <article>
             <h1>
                 <a href="/posts/<?= $post->getSlug()?>">
-                    <?=$post->title?>
+                    {{$post->title}}
                 </a>
 
             </h1>
 
-            <div><?=$post->excerpt?></div>
+            <div>{{$post->excerpt}}
+            </div>
 
         </article>
     <?php endforeach; ?>
