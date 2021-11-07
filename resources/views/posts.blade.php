@@ -4,10 +4,10 @@
 <link rel="stylesheet" href="/app.css">
 
 <body>
-    <?php foreach ($posts as $post) : ?>
-        <article>
+    @foreach ($posts as $post)
+        <article class="{{ $loop->even ? 'myMarginer' : '' }}">
             <h1>
-                <a href="/posts/<?= $post->getSlug()?>">
+                <a href="/posts/{{$post->getSlug()}}">
                     {{$post->title}}
                 </a>
 
@@ -17,5 +17,5 @@
             </div>
 
         </article>
-    <?php endforeach; ?>
+    @endforeach
 </body>

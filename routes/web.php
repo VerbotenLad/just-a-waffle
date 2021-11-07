@@ -31,3 +31,6 @@ Route::get('posts/{post}', function($slug) {
 
 
 })->where('post', '[A-z_\-]+'); //this says that the VALUE of the KEY 'post' should match the specified regex
+
+
+Route::get('/{any}', 'App\Http\Controllers\PagesController@index')->where('any', '.*');
